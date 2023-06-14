@@ -1,6 +1,31 @@
 version: 0.2
 
 phases:
- build:
-  commands:
-    - echo "Hello WORLD!"
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - pip install awscli
+      - echo "Installing Docker..."
+      - apt-get update -y
+      - apt-get install -y docker.io
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 850286438394.dkr.ecr.eu-central-1.amazonaws.com
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -t djangopipeline .
+      - echo Tagging the Docker image...
+      - docker tag djangopipeline:latest 850286438394.dkr.ecr.eu-central-1.amazonaws.com/djangopipeline:latest
+  post_build:
+    commands:
+      - echo Pushing the Docker image to Amazon ECR...
+      - docker push 850286438394.dkr.ecr.eu-central-1.amazonaws.com/djangopipeline:latest
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
+  base-directory: /code
