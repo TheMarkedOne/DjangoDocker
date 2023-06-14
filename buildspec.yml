@@ -4,17 +4,21 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 850286438394.dkr.ecr.eu-central-1.amazonaws.com
+      - export ECR_REGISTRY=850286438394.dkr.ecr.eu-central-1.amazonaws.com
+      - export AWS_REGION=eu-central-1
+      - export AWS_ACCOUNT_ID=850286438394
+      - export ECR_LOGIN_COMMAND=$(aws ecr get-login-password --region $AWS_REGION)
+      - echo $ECR_LOGIN_COMMAND | docker login --username AWS --password-stdin $ECR_REGISTRY
   build:
     commands:
       - echo Building the Docker image...
       - docker build -t djangopipeline .
       - echo Tagging the Docker image...
-      - docker tag djangopipeline:latest 850286438394.dkr.ecr.eu-central-1.amazonaws.com/djangopipeline:latest
+      - docker tag djangopipeline:latest $ECR_REGISTRY/djangopipeline:latest
   post_build:
     commands:
       - echo Pushing the Docker image to Amazon ECR...
-      - docker push 850286438394.dkr.ecr.eu-central-1.amazonaws.com/djangopipeline:latest
+      - docker push $ECR_REGISTRY/djangopipeline:latest
 
 artifacts:
   files:
