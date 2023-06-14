@@ -1,14 +1,6 @@
 version: 0.2
 
 phases:
-  install:
-    runtime-versions:
-      python: 3
-    commands:
-      - pip install awscli
-      - echo "Installing Docker..."
-      - apt-get update -y
-      - apt-get install -y docker.io
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -27,5 +19,4 @@ phases:
 artifacts:
   files:
     - '**/*'
-  discard-paths: yes
-  base-directory: /code
+  base-directory: /
