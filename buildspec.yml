@@ -10,7 +10,7 @@ phases:
     commands:
       - echo Pushing to ECR
       - docker push 850286438394.dkr.ecr.eu-central-1.amazonaws.com/djangopipeline:latest
-      - printf '[{"name":"test-djangopipeline-ecs","imageUri":"850286438394.dkr.ecr.eu-central-1.amazonaws.com/djangopipeline:latest"}]' > djangopipeline-imagedefinitions.json
+      - printf '[{"name":"DjangoDocker","imageUri":"850286438394.dkr.ecr.eu-central-1.amazonaws.com/djangopipeline:latest"}]' > djangopipeline-imagedefinitions.json
 artifacts:
   files:
     - djangopipeline-imagedefinitions.json
